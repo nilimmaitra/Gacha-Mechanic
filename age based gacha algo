@@ -56,3 +56,43 @@ int main() {
 
     return 0;
 }
+
+/* About code: 
+
+**Objective**: The goal of this code is to simulate a reward system based on a player's age factor and the divisibility of randomly generated numbers.
+
+1. **Setup**:
+   - Import necessary libraries for handling random numbers (`random`), input-output (`iostream`), and dynamic arrays (`vector`).
+   - Initialize a random number generator engine (`mt19937`) and a uniform distribution (`uniform_int_distribution`) to generate random numbers between 1 and 100.
+
+2. **Age Factor Input**:
+   - Ask the user for their age factor, representing the player's age. The age factor cannot be greater than 10.
+
+3. **Upper Bound Calculation**:
+   - Calculate the upper bound for generating random numbers. The upper bound decreases as the age factor increases. This ensures that younger players have a higher chance of receiving better rewards.
+
+4. **Number of Draws Input**:
+   - Ask the user how many draws they want to simulate.
+
+5. **Reward Categories and Counters**:
+   - Define an array `rewardCount` to keep track of the number of rewards in each category: "Best," "Good," "Normal," "Bad," and "Worst."
+
+6. **Reward Simulation Loop**:
+   - Iterate through the specified number of draws.
+   - Generate a random number using the predefined distribution.
+   - Determine the reward category based on both the age factor and the divisibility of the random number.
+   - Update the corresponding category's counter in the `rewardCount` array.
+
+7. **Display Rewards**:
+   - Display the simulation results by showing the number of rewards received in each category ("Best," "Good," "Normal," "Bad," and "Worst").
+
+**Overall Approach**:
+1. Set up the random number generator and define the range for generating random numbers.
+2. Gather the player's age factor and limit it to a maximum of 10.
+3. Calculate the appropriate upper bound for generating random numbers based on the age factor.
+4. Get the number of draws to simulate.
+5. Initialize counters for each reward category.
+6. For each simulated draw, generate a random number and determine the reward category based on both the age factor and the divisibility of the random number. Update the counters accordingly.
+7. Display the results, showing how many rewards of each category were received.
+
+Thanks for reading. */
