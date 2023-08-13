@@ -1,2 +1,58 @@
-documentation
-code
+#include <iostream>
+#include <random>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> distribution(1, 100);
+
+    int ageFactor;
+    cout << "Age Factor?" << endl;
+    cin >> ageFactor;
+    ageFactor = min(ageFactor, 10);
+    int upperBound = 110 - (10 * ageFactor);
+
+    vector<int> storeRandom;
+    int n;
+    cout << "How many Draws?" << endl;
+    cin >> n;
+
+    // Counters for rewards
+    int rewardCount[5] = {0};  // Best, Good, Normal, Bad, Worst
+
+    for (int i = 0; i < n; ++i) {
+        int randomInt = distribution(gen);
+        storeRandom.push_back(randomInt);
+
+        // Calculate reward category based on both ageFactor and divisibility
+        int category = 2;  // Default: Normal Reward
+
+        if (randomInt % ageFactor == 0) {
+            if (randomInt % 10 == 0 || randomInt % 8 == 0) {
+                category = 4;  // Worst Reward
+            } else {
+                category = 0;  // Best Reward
+            }
+        } else if (randomInt % ageFactor == 1) {
+            if (randomInt % 9 == 0) {
+                category = 3;  // Bad Reward
+            } else {
+                category = 1;  // Good Reward
+            }
+        }
+
+        rewardCount[category]++;
+    }
+
+    cout << "...Calculating Rewards Received..." << endl;
+    cout << "Best Reward: " << rewardCount[0] << endl;
+    cout << "Good Reward: " << rewardCount[1] << endl;
+    cout << "Normal Reward: " << rewardCount[2] << endl;
+    cout << "Bad Reward: " << rewardCount[3] << endl;
+    cout << "Worst Reward: " << rewardCount[4] << endl;
+
+    return 0;
+}
