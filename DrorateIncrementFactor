@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+struct Prize {
+    string name;
+    float dropRate;
+    float plusPoint;
+};
+
+float getRandomFloat(float min, float max) {
+    return min + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (max - min));
+}
+
+float getRandomSpendingHabit() {
+    return getRandomFloat(1.0, 100.0);
+}
+
+float getRandomAvgDraws() {
+    return getRandomFloat(1.0, 20.0);
+}
+
+void initializePrizes(vector<Prize>& prizeList) {
+    prizeList = {
+        {"Common Prize", 50.0, 0.0},
+        {"Rare Prize", 30.0, 0.0},
+        {"Epic Prize", 15.0, 0.0},
+        {"Legendary Prize", 5.0, 0.0}
+    };
+}
+
+void adjustDropRates(vector<Prize>& prizeList) {
+    for (Prize& prize : prizeList) {
+        prize.dropRate += prize.plusPoint;
+    }
+}
+
+const Prize& simulateDraw(const vector<Prize>& prizeList) {
+    float totalDropRate = 0.0;
+    for (const Prize& prize : prizeList) {
+        totalDropRate += prize.dropRate;
+    }
+
+    float randomValue = getRandomFloat(0.0, totalDropRate);
+    for (const Prize& prize : prizeList) {
+        if (randomValue < prize.dropRate) {
+            return prize;
+        }
+        randomValue -= prize.dropRate;
+    }
+
+    return prizeList.back(); // In case of any unexpected scenario
+}
+
+int main() {
+    srand(static_cast<unsigned int>(time(0)));
+
+    vector<Prize> prizeList;
+    initializePrizes(prizeList);
+
+    float spendingHabitChoice;
+    float avgDrawsChoice;
+    cout << "Do you want random spending habit and average draws? (1 for yes, 0 for no): ";
+    cin >> spendingHabitChoice;
+
+    if (spendingHabitChoice == 1) {
+        float randomSpendingHabit = getRandomSpendingHabit();
+        float randomAvgDraws = getRandomAvgDraws();
+        cout << "Random Spending Habit: " << randomSpendingHabit << endl;
+        cout << "Random Average Draws: " << randomAvgDraws << endl;
+        
+        for (Prize& prize : prizeList) {
+            prize.plusPoint = randomSpendingHabit / 10 + randomAvgDraws / 5;
+        }
+    } else {
+        cout << "Enter your spending habit (minimum 10): ";
+        cin >> spendingHabitChoice;
+        cout << "Enter your average draws (between 1 and 20): ";
+        cin >> avgDrawsChoice;
+        
+        for (Prize& prize : prizeList) {
+            prize.plusPoint = spendingHabitChoice / 10 + avgDrawsChoice / 5;
+        }
+    }
+
+    adjustDropRates(prizeList);
+
+    for (const Prize& prize : prizeList) {
+        cout << prize.name << " - Adjusted Drop Rate: " << prize.dropRate << endl;
+    }
+
+    int numDrawsChoice;
+    cout << "Enter the number of draws: ";
+    cin >> numDrawsChoice;
+
+    if (numDrawsChoice <= 0) {
+        cout << "Invalid number of draws." << endl;
+        return 1;
+    }
+
+    for (int i = 1; i <= numDrawsChoice; ++i) {
+        const Prize& wonPrize = simulateDraw(prizeList);
+        cout << "Draw " << i << ": You won " << wonPrize.name << endl;
+
+        if (i % 10 == 0) {
+            for (Prize& prize : prizeList) {
+                if (prize.name != wonPrize.name) {
+                    prize.plusPoint += prize.plusPoint;
+                    prize.dropRate += prize.plusPoint;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
